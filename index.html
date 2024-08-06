@@ -48,15 +48,15 @@
         data: {
           products: [],
           categories: [],
-          selectedCategory: 'All',
+          selectedCategory: '全部',
         },
         mounted() {
           this.fetchData();
-          this.interval = setInterval(this.fetchData, 600000);
+          this.interval = setInterval(this.fetchData, 60000);
         },
         computed: {
           filteredProducts() {
-            if (this.selectedCategory === 'All') {
+            if (this.selectedCategory === '全部') {
               return this.products;
             } else {
               return this.products.filter(product => product['分類'] === this.selectedCategory);
@@ -65,16 +65,12 @@
         },
         methods: {
           fetchData() {
-            axios.get('https://ap10.ragic.com/egnet/ok/14?api&v=3')
+            fetch('https://ap10.ragic.com/egnet/ok/14?api&v=3')
               .then(response => response.json())
               .then(data => {
-                this.products = Object.values(data);
-                this.categories = [...new Set(this.products.map(product => product['分類']))];
-                this.categories.unshift('All');
-              })
-              .catch(error => {
-                console.error('Error fetching data:', error);
-                Swal.fire({title: "連線失敗",text: error,icon: "error"});
+                  this.products = Object.values(data);
+                  this.categories = [...new Set(this.products.map(product => product['分類']))];
+                  this.categories.unshift('All');
               });
           },
           selectCategory(category) { // 選擇分類
