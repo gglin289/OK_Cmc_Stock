@@ -52,7 +52,7 @@
         },
         mounted() {
           this.fetchData();
-          this.interval = setInterval(this.fetchData, 60000);
+          this.interval = setInterval(this.fetchData, 600000);
         },
         computed: {
           filteredProducts() {
@@ -66,15 +66,15 @@
         methods: {
           fetchData() {
             fetch('https://ap10.ragic.com/egnet/ok/14?api&v=3')
-              .then(response => response.json())
-              .then(data => {
-                  this.products = Object.values(data);
-                  this.categories = [...new Set(this.products.map(product => product['分類']))];
-                  this.categories.unshift('All');
-              });
+            .then(response => response.json())
+            .then(data => {
+              this.products = Object.values(data);
+              this.categories = [...new Set(this.products.map(product => product['分類']))];
+              this.categories.unshift('全部');
+            });
           },
           selectCategory(category) { // 選擇分類
-              this.selectedCategory = category;
+            this.selectedCategory = category;
           },
           showQuantityModal(item) {
             Swal.fire({
@@ -87,30 +87,30 @@
               cancelButtonText: '取消',
             }).then((result) => {
               if (result.isConfirmed) {
-                  let Qty = Number(item['現存數量']) + Number(result.value) ;
-                  if (Qty < 0) {
-                    Swal.fire({title: "處理失敗", confirmButtonText: '確定', text: "數量不可為負數", icon: "warning"})
-                  } else {
-                    item['現存數量'] = Qty ;
-                    let data = new FormData();
-                    data.append('1000492', Qty);
-                    let config = {
-                      method: 'post',
-                      url: 'https://ap10.ragic.com/egnet/ok/14/' + item._ragicId + '?api&v=3',
-                      data : data
-                    };
-                    axios(config)
-                    .then(response => {
-                      if (response.data.status == 'SUCCESS'){
-                        Swal.fire({title: "存擋成功", confirmButtonText: '確定', icon: "success"});
-                      } else {
-                        Swal.fire({title: "存擋失敗", confirmButtonText: '確定', text: response.data.msg, icon: "warning"});
-                      }
-                    })
-                    .catch(error => {
-                      Swal.fire({title: "連線失敗",text: error,icon: "error"});
-                    });
-                  }
+                let Qty = Number(item['現存數量']) + Number(result.value) ;
+                if (Qty < 0) {
+                  Swal.fire({title: "處理失敗", confirmButtonText: '確定', text: "數量不可為負數", icon: "warning"})
+                } else {
+                  item['現存數量'] = Qty ;
+                  let data = new FormData();
+                  data.append('1000492', Qty);
+                  let config = {
+                    method: 'post',
+                    url: 'https://ap10.ragic.com/egnet/ok/14/' + item._ragicId + '?api&v=3',
+                    data : data
+                  };
+                  axios(config)
+                  .then(response => {
+                    if (response.data.status == 'SUCCESS'){
+                      Swal.fire({title: "存擋成功", confirmButtonText: '確定', icon: "success"});
+                    } else {
+                      Swal.fire({title: "存擋失敗", confirmButtonText: '確定', text: response.data.msg, icon: "warning"});
+                    }
+                  })
+                  .catch(error => {
+                    Swal.fire({title: "連線失敗",text: error,icon: "error"});
+                  });
+                }
               }
             })
           }
