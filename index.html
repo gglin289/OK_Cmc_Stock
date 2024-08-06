@@ -66,8 +66,9 @@
         methods: {
           fetchData() {
             axios.get('https://ap10.ragic.com/egnet/ok/14?api&v=3')
-              .then(response => {
-                this.products = response.data;
+              .then(response => response.json())
+              .then(data => {
+                this.products = Object.values(data);
                 this.categories = [...new Set(this.products.map(product => product['分類']))];
                 this.categories.unshift('All');
               })
