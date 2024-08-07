@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-  <html lang="en">
+  <html lang="zh-Hant-TW">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,26 +10,22 @@
   <body>
     <div id="app">
       <div class="container">
-        <div class="row">
-          <div class="col-2">
-            <div class="btn-group-vertical">
-                <button class="btn btn-outline-primary btn-group-lg" v-for="category in categories" :class="{'active' : category == selectedCategory}" type="button" @click="selectCategory(category)">{{category}}</button>
-            </div>
+        <ul class="nav nav-tabs">
+          <li class="nav-item" v-for="category in categories">
+            <a class="nav-link" :class="{'active' : category == selectedCategory}" @click="selectCategory(category)" aria-current="page" href="#">{{category}}</a>
+          </li>
+        </ul>
+        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-4">
+          <div v-if="products.length == 0">
+            <img class="card-img-top" src="Images/loading.png">
           </div>
-          <div class="col-10">
-            <div class="row row-cols-2 row-cols-md-6 g-4">
-              <div v-if="products.length == 0">
-                <img class="card-img-top" src="Images/loading.png">
-              </div>
-              <div class="col" v-for="product in filteredProducts">
-                <div class="card" :class="{'bg-warning' : (product['現存數量']-product['安全數量']) <= 0 }" @click="showQuantityModal(product)">
-                  <img v-if="product['圖片']" class="card-img-top" :src="'https://www.ragic.com/sims/file.jsp?a=egnet&f=' + product['圖片']">
-                  <img v-else class="card-img-top" src="Images/image.png">
-                  <div class="card-body position-relative">
-                    <h6 class="card-title" >{{ product['名稱'] }}</h6>
-                    <p class="card-text">庫存：{{ product['現存數量']}} {{ product['單位']}}</p>
-                  </div>
-                </div>
+          <div class="col" v-for="product in filteredProducts">
+            <div class="card"  @click="showQuantityModal(product)">
+              <img v-if="product['圖片']" class="card-img-top" :src="'https://www.ragic.com/sims/file.jsp?a=egnet&f=' + product['圖片']">
+              <img v-else class="card-img-top" src="Images/image.png">
+              <div class="card-body position-relative">
+                <h6 class="card-title" >{{ product['名稱'] }}</h6>
+                <p class="card-text" :class="{'text-danger' : (product['現存數量']-product['安全數量']) <= 0 }">庫存：{{ product['現存數量']}} {{ product['單位']}}</p>
               </div>
             </div>
           </div>
