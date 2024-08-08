@@ -83,7 +83,7 @@
               cancelButtonText: '取消',
             }).then((result) => {
               if (result.isConfirmed) {
-                item['現存數量'] += Number(result.value) ;
+                item['現存數量'] = Number(item['現存數量']) + Number(result.value) ;
                 if (item['現存數量'] < 0) {
                   Swal.fire({title: "處理失敗", confirmButtonText: '確定', text: "數量不可為負數", icon: "warning"})
                 } else {
