@@ -83,16 +83,16 @@
               cancelButtonText: '取消',
             }).then((result) => {
               if (result.isConfirmed) {
-                let Qty = Number(item['現存數量']) + Number(result.value) ;
-                if (Qty < 0) {
+                item['現存數量'] += Number(result.value) ;
+                if (item['現存數量'] < 0) {
                   Swal.fire({title: "處理失敗", confirmButtonText: '確定', text: "數量不可為負數", icon: "warning"})
                 } else {
-                  item['現存數量'] = Qty ;
                   let data = new FormData();
-                  data.append('1000492', Qty);
+                  data.append('1000494', item['名稱']);
+                  data.append('1000702', result.value);
                   let config = {
                     method: 'post',
-                    url: 'https://ap10.ragic.com/egnet/ok/14/' + item._ragicId + '?api&v=3',
+                    url: 'https://ap10.ragic.com/egnet/ok/17/?api&v=3',
                     data : data
                   };
                   axios(config)
